@@ -1,0 +1,14 @@
+package ma.sante_fos.plateforme;
+
+import org.springframework.boot.SpringApplication;
+
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+	   
+	
+	public class PlateformeApplication {
+	    public static void main(String[] args) {
+	        SpringApplication.run(PlateformeApplication.class, args);
+	    }
+	}
