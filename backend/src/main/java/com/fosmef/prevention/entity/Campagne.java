@@ -1,8 +1,10 @@
-package com.fosmef.prevention.campagne;
+package com.fosmef.prevention.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
 import java.time.LocalDate;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 @Entity
 @Table(name = "campagnes")
@@ -29,6 +31,20 @@ public class Campagne {
     @Column(name = "date_fin", nullable = false)
     private LocalDate dateFin;
 
-    @Column(name = "type_depistage", nullable = false)
-    private String typeDepistage;
+    @NotNull
+    @Min(1)
+    @Column(name = "places_totales", nullable = false)
+    private Integer placesTotales;
+
+    @NotNull
+    @Min(0)
+    @Column(name = "places_reservees", nullable = false)
+    private Integer placesReservees;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private StatutCampagne statut;
+
+    @Version
+    private Long version;
 }
