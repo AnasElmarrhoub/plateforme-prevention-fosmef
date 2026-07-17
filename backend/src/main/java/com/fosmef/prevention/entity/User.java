@@ -7,7 +7,7 @@ import lombok.*;
 
 @Entity
 @Table(name = "users", uniqueConstraints = {
-    @UniqueConstraint(columnNames = "email")
+        @UniqueConstraint(columnNames = "email")
 })
 @Getter
 @Setter
@@ -28,6 +28,12 @@ public class User {
     @NotBlank
     @Column(nullable = false)
     private String password;
+
+    @NotBlank
+    @Column(unique = true)
+    private String ppm;
+
+    private String telephone;
 
     @NotBlank
     @Column(nullable = false)

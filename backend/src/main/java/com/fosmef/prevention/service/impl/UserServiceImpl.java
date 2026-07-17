@@ -41,6 +41,8 @@ public class UserServiceImpl implements UserService {
                 .password(hashedPassword)
                 .nom(request.nom())
                 .prenom(request.prenom())
+                .ppm(request.ppm())
+                .telephone(request.telephone())
                 .role(request.role())
                 .build();
 
@@ -55,7 +57,8 @@ public class UserServiceImpl implements UserService {
     public UserResponse login(LoginRequest request) {
         // 1. Recherche par email
         User user = userRepository.findByEmail(request.email())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Email ou mot de passe incorrect"));
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Email ou mot de passe incorrect"));
 
         // 2. Vérification du mot de passe crypté
         if (!passwordEncoder.matches(request.password(), user.getPassword())) {
@@ -79,7 +82,8 @@ public class UserServiceImpl implements UserService {
                 user.getEmail(),
                 user.getNom(),
                 user.getPrenom(),
-                user.getRole()
-        );
+                user.getPpm(),
+                user.getTelephone(),
+                user.getRole());
     }
 }
