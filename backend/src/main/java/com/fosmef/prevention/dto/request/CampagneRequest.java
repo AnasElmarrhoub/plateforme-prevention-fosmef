@@ -8,6 +8,7 @@ import java.time.LocalDate;
 public record CampagneRequest(
     @NotBlank String titre,
     String description,
+    String lieu,
     @NotNull LocalDate dateDebut,
     @NotNull LocalDate dateFin,
     @NotNull @Min(1) Integer placesTotales

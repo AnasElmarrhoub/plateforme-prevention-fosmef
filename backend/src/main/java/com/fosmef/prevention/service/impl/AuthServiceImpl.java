@@ -71,6 +71,13 @@ public class AuthServiceImpl implements AuthService {
         return new AuthResponse(jwtToken, mapToResponse(user));
     }
 
+    @Override
+    public UserResponse getProfile(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable avec l'email: " + email));
+        return mapToResponse(user);
+    }
+
     private UserResponse mapToResponse(User user) {
         return new UserResponse(
                 user.getId(),

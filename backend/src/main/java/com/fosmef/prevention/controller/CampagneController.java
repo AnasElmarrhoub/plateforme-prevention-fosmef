@@ -17,7 +17,6 @@ public class CampagneController {
 
     private final CampagneService campagneService;
 
-    // Injection de l'interface (couplage faible)
     public CampagneController(CampagneService campagneService) {
         this.campagneService = campagneService;
     }
@@ -28,10 +27,23 @@ public class CampagneController {
         return ResponseEntity.ok(campagneService.getAllCampagnes());
     }
 
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADHERENT', 'GESTIONNAIRE')")
+    public ResponseEntity<CampagneResponse> getCampagneById(@PathVariable Long id) {
+        return ResponseEntity.ok(campagneService.getCampagneById(id));
+    }
+
     @PostMapping
     @PreAuthorize("hasRole('GESTIONNAIRE')")
     public ResponseEntity<CampagneResponse> createCampagne(@Valid @RequestBody CampagneRequest request) {
         CampagneResponse response = campagneService.createCampagne(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('GESTIONNAIRE')")
+    public ResponseEntity<Void> deleteCampagne(@PathVariable Long id) {
+        campagneService.deleteCampagne(id);
+        return ResponseEntity.noContent().build();
     }
 }

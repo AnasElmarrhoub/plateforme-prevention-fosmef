@@ -7,6 +7,7 @@ public record CampagneResponse(
     Long id,
     String titre,
     String description,
+    String lieu,
     LocalDate dateDebut,
     LocalDate dateFin,
     Integer placesTotales,

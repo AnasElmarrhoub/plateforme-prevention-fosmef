@@ -25,6 +25,9 @@ public class Campagne {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Column(nullable = true)
+    private String lieu;
+
     @Column(name = "date_debut", nullable = false)
     private LocalDate dateDebut;
 

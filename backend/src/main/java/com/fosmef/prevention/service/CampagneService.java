@@ -6,5 +6,7 @@ import java.util.List;
 
 public interface CampagneService {
     List<CampagneResponse> getAllCampagnes();
+    CampagneResponse getCampagneById(Long id);
     CampagneResponse createCampagne(CampagneRequest request);
+    void deleteCampagne(Long id);
 }

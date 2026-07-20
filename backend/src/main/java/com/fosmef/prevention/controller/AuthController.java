@@ -3,10 +3,12 @@ package com.fosmef.prevention.controller;
 import com.fosmef.prevention.dto.request.LoginRequest;
 import com.fosmef.prevention.dto.request.RegisterRequest;
 import com.fosmef.prevention.dto.response.AuthResponse;
+import com.fosmef.prevention.dto.response.UserResponse;
 import com.fosmef.prevention.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -29,5 +31,14 @@ public class AuthController {
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         AuthResponse response = authService.login(request);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse> getProfile(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        String email = authentication.getName();
+        return ResponseEntity.ok(authService.getProfile(email));
     }
 }

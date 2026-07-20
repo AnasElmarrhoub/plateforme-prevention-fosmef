@@ -5,11 +5,20 @@
   --foreground: #171717;
 }
 
-@theme inline {
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  
+  --color-brand-blue: #19365D;
+  --color-brand-blue-hover: #142b4b;
+  --color-brand-teal: #009BA4;
+  --color-brand-teal-hover: #008188;
+  --color-brand-ruby: #B51F5F;
+  --color-brand-ruby-hover: #9E1B50;
+  --color-brand-gray: #F8FAFC;
+  --color-brand-gray-dark: #E2E8F0;
 }
 
 @media (prefers-color-scheme: dark) {
