@@ -249,7 +249,7 @@ export default function AdminCampagnesPage() {
 
             <form onSubmit={handleCreate} className="space-y-4">
               <div>
-                <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Titre de la campagne *</label>
+                <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">Titre de la campagne *</label>
                 <input
                   name="titre"
                   type="text"
@@ -257,61 +257,61 @@ export default function AdminCampagnesPage() {
                   value={formData.titre}
                   onChange={handleChange}
                   placeholder="Ex: Campagne Dépistage Vision & Diabète 2026"
-                  className="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-teal"
+                  className="w-full px-3.5 py-2.5 bg-white text-slate-800 font-semibold border border-slate-300 rounded-xl text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-teal focus:border-transparent transition-all shadow-2xs"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Description</label>
+                <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">Description</label>
                 <textarea
                   name="description"
                   rows={2}
                   value={formData.description}
                   onChange={handleChange}
                   placeholder="Objectif et description de la campagne..."
-                  className="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-teal"
+                  className="w-full px-3.5 py-2.5 bg-white text-slate-800 font-semibold border border-slate-300 rounded-xl text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-teal focus:border-transparent transition-all shadow-2xs"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Lieu (Ville / Centre médical)</label>
+                <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">Lieu (Ville / Centre médical)</label>
                 <input
                   name="lieu"
                   type="text"
                   value={formData.lieu}
                   onChange={handleChange}
                   placeholder="Ex: Centre Médical FOSMEF Rabat"
-                  className="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-teal"
+                  className="w-full px-3.5 py-2.5 bg-white text-slate-800 font-semibold border border-slate-300 rounded-xl text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-teal focus:border-transparent transition-all shadow-2xs"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Date de début *</label>
+                  <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">Date de début *</label>
                   <input
                     name="dateDebut"
                     type="date"
                     required
                     value={formData.dateDebut}
                     onChange={handleChange}
-                    className="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-teal"
+                    className="w-full px-3.5 py-2.5 bg-white text-slate-800 font-semibold border border-slate-300 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-brand-teal focus:border-transparent transition-all shadow-2xs"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Date de fin *</label>
+                  <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">Date de fin *</label>
                   <input
                     name="dateFin"
                     type="date"
                     required
                     value={formData.dateFin}
                     onChange={handleChange}
-                    className="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-teal"
+                    className="w-full px-3.5 py-2.5 bg-white text-slate-800 font-semibold border border-slate-300 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-brand-teal focus:border-transparent transition-all shadow-2xs"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Nombre de places totales *</label>
+                <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">Nombre de places totales *</label>
                 <input
                   name="placesTotales"
                   type="number"
@@ -319,7 +319,7 @@ export default function AdminCampagnesPage() {
                   required
                   value={formData.placesTotales}
                   onChange={handleChange}
-                  className="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-teal"
+                  className="w-full px-3.5 py-2.5 bg-white text-slate-800 font-semibold border border-slate-300 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-brand-teal focus:border-transparent transition-all shadow-2xs"
                 />
               </div>
 

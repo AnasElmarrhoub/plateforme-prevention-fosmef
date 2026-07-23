@@ -130,4 +130,4 @@ plateforme-prevention-fosmef/
 ---
 
 ## 👥 Auteur
-Projet développé dans le cadre de la plateforme de gestion des campagnes de prévention sanitaire FOS-MEF par **Anas El Marrhoub**.
+Projet développé dans le cadre de la plateforme de gestion des campagnes de prévention sanitaire FOS-MEF par **Anas EL-MARRHOUB**.
