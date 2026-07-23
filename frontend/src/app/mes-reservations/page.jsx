@@ -2,7 +2,9 @@
 
 import React, { useEffect, useState } from 'react';
 import AdherentLayout from '@/components/AdherentLayout';
+import { useAuth } from '@/context/AuthContext';
 import { reservationsApi } from '@/lib/api';
+import { generateTicketPDF } from '@/lib/pdfGenerator';
 
 const STATUT_CONFIG = {
   CONFIRMEE:  { label: 'Confirmée',   bg: 'bg-brand-teal/5',  text: 'text-brand-teal',  dot: 'bg-brand-teal',  border: 'border-brand-teal/20'  },
@@ -21,6 +23,7 @@ function StatutBadge({ statut }) {
 }
 
 export default function MesReservationsPage() {
+  const { user } = useAuth();
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -193,17 +196,31 @@ export default function MesReservationsPage() {
                       <StatutBadge statut={r.statut} />
                     </td>
                     <td className="px-6 py-4 text-right">
-                      {r.statut !== 'ANNULEE' ? (
-                        <button
-                          onClick={() => handleAnnuler(r.id)}
-                          disabled={cancellingId === r.id}
-                          className="text-[11px] font-bold text-brand-ruby hover:underline hover:text-brand-ruby-hover transition-colors disabled:opacity-50"
-                        >
-                          {cancellingId === r.id ? 'Annulation...' : 'Annuler'}
-                        </button>
-                      ) : (
-                        <span className="text-[11px] text-slate-300">—</span>
-                      )}
+                      <div className="flex items-center justify-end gap-2.5">
+                        {r.statut !== 'ANNULEE' && (
+                          <button
+                            onClick={() => generateTicketPDF(r, user)}
+                            className="inline-flex items-center gap-1.5 text-[11px] font-bold text-brand-teal hover:text-brand-teal-hover bg-brand-teal/10 hover:bg-brand-teal/20 px-2.5 py-1.5 rounded-lg transition-all shadow-2xs"
+                            title="Télécharger le ticket de réservation (PDF)"
+                          >
+                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Ticket PDF
+                          </button>
+                        )}
+                        {r.statut !== 'ANNULEE' ? (
+                          <button
+                            onClick={() => handleAnnuler(r.id)}
+                            disabled={cancellingId === r.id}
+                            className="text-[11px] font-bold text-brand-ruby hover:underline hover:text-brand-ruby-hover transition-colors disabled:opacity-50"
+                          >
+                            {cancellingId === r.id ? 'Annulation...' : 'Annuler'}
+                          </button>
+                        ) : (
+                          <span className="text-[11px] text-slate-300">—</span>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}

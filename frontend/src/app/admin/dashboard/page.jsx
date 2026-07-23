@@ -9,8 +9,10 @@ export default function AdminDashboardPage() {
   const [campagnes, setCampagnes] = useState([]);
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState(null);
 
-  useEffect(() => {
+  const refreshData = () => {
+    setLoading(true);
     Promise.all([
       campagnesApi.getAll().catch(() => []),
       reservationsApi.getAllReservations().catch(() => []),
@@ -20,7 +22,24 @@ export default function AdminDashboardPage() {
     }).finally(() => {
       setLoading(false);
     });
+  };
+
+  useEffect(() => {
+    refreshData();
   }, []);
+
+  const handleDeleteCampagne = async (id, titre) => {
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer définitivement la campagne "${titre}" de la base de données ?\n\nCette action est irréversible.`)) return;
+    setDeletingId(id);
+    try {
+      await campagnesApi.delete(id);
+      refreshData();
+    } catch (err) {
+      alert(err.message || 'Erreur lors de la suppression.');
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   const totalPlacesTotales = campagnes.reduce((sum, c) => sum + (c.placesTotales || 0), 0);
   const totalPlacesReservees = campagnes.reduce((sum, c) => sum + (c.placesReservees || 0), 0);
@@ -209,12 +228,24 @@ export default function AdminDashboardPage() {
                         </span>
                       </td>
                       <td className="px-4 py-3.5 text-right">
-                        <Link
-                          href={`/admin/campagnes/${c.id}/inscrits`}
-                          className="text-xs font-bold text-brand-teal hover:underline"
-                        >
-                          Voir Inscrits ({c.placesReservees}) →
-                        </Link>
+                        <div className="flex items-center justify-end gap-3">
+                          <Link
+                            href={`/admin/campagnes/${c.id}/inscrits`}
+                            className="text-xs font-bold text-brand-teal hover:underline"
+                          >
+                            Voir Inscrits ({c.placesReservees}) →
+                          </Link>
+                          <button
+                            onClick={() => handleDeleteCampagne(c.id, c.titre)}
+                            disabled={deletingId === c.id}
+                            title="Supprimer la campagne de la base de données"
+                            className="p-1 text-slate-300 hover:text-brand-ruby transition-colors cursor-pointer disabled:opacity-50"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );

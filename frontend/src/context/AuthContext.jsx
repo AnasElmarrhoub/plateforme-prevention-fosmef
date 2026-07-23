@@ -12,15 +12,30 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // Rehydrate from localStorage on mount
+  // Rehydrate from localStorage on mount & refresh profile live from database
   useEffect(() => {
     const storedToken = localStorage.getItem('fosmef_token');
     const storedUser = localStorage.getItem('fosmef_user');
-    if (storedToken && storedUser) {
+    if (storedToken) {
       setToken(storedToken);
-      setUser(JSON.parse(storedUser));
+      if (storedUser) {
+        try {
+          setUser(JSON.parse(storedUser));
+        } catch (_) {}
+      }
+      // Always fetch fresh user profile from PostgreSQL DB
+      authApi.getMe()
+        .then((freshUser) => {
+          setUser(freshUser);
+          localStorage.setItem('fosmef_user', JSON.stringify(freshUser));
+        })
+        .catch(() => {
+          // Token invalid or expired
+        })
+        .finally(() => setLoading(false));
+    } else {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
   const login = useCallback(async (email, password) => {

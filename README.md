@@ -120,14 +120,23 @@ plateforme-prevention-fosmef/
 │   ├── src/main/java/        # Entités, Repositories, Services, Controllers, Security
 │   └── src/main/resources/   # Configuration application.properties
 ├── frontend/                 # Application Next.js (React 19)
-│   ├── src/app/              # Pages & Routes (Adhérent, Admin, Login, Profil)
-│   ├── src/components/       # Composants réutilisables & Layouts (AdherentLayout, AdminLayout)
-│   ├── src/context/          # AuthContext (Gestion du rôle et du Token JWT)
-│   └── src/lib/              # Client API centralisé (api.js)
+│   ├── src/app/              # Pages & Routes (Adhérent, Admin, Chatbot API)
+│   ├── src/components/       # Composants réutilisables & Layouts (AdherentLayout, AdminLayout, ChatbotWidget)
+│   ├── src/context/          # AuthContext (Gestion du rôle, Token JWT & Live Sync DB)
+│   └── src/lib/              # Client API centralisé (api.js) et Générateur PDF (pdfGenerator.js)
+├── DEVELOPMENT_REPORT.md     # Rapport complet d'architecture technique & développement
 └── README.md
 ```
 
 ---
 
+## 📑 Rapport d'Architecture et Choix Techniques
+Consultez le document **[DEVELOPMENT_REPORT.md](DEVELOPMENT_REPORT.md)** pour le détail complet de l'architecture :
+- Génération des billets PDF en client-side (`jsPDF`) vs OpenPDF (Java).
+- Intégration de l'Assistant virtiel IA avec Google Gemini AI (`@google/generative-ai`).
+- Synchronisation en temps réel du profil utilisateur depuis PostgreSQL.
+
+---
+
 ## 👥 Auteur
-Projet développé dans le cadre de la plateforme de gestion des campagnes de prévention sanitaire FOS-MEF par **Anas EL-MARRHOUB**.
+Projet développé dans le cadre de la plateforme de gestion des campagnes de prévention sanitaire FOS-MEF par **Anas EL MARRHOUB**.

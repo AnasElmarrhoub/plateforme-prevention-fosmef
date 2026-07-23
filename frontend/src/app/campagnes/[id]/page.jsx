@@ -4,7 +4,9 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import AdherentLayout from '@/components/AdherentLayout';
+import { useAuth } from '@/context/AuthContext';
 import { campagnesApi, reservationsApi } from '@/lib/api';
+import { generateTicketPDF } from '@/lib/pdfGenerator';
 
 const STATUT_CONFIG = {
   PLANIFIEE: { label: 'Planifiée', bg: 'bg-amber-50', text: 'text-amber-700', dot: 'bg-amber-500', border: 'border-amber-200' },
@@ -16,6 +18,7 @@ const STATUT_CONFIG = {
 export default function CampagneDetailPage() {
   const { id } = useParams();
   const router = useRouter();
+  const { user } = useAuth();
 
   const [campagne, setCampagne] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -23,6 +26,7 @@ export default function CampagneDetailPage() {
 
   const [reserving, setReserving] = useState(false);
   const [reservationSuccess, setReservationSuccess] = useState(false);
+  const [createdReservation, setCreatedReservation] = useState(null);
   const [reservationError, setReservationError] = useState('');
   const [showModal, setShowModal] = useState(false);
 
@@ -37,9 +41,44 @@ export default function CampagneDetailPage() {
     setReserving(true);
     setReservationError('');
     try {
-      await reservationsApi.reserver(parseInt(id));
+      const res = await reservationsApi.reserver(parseInt(id));
+      
+      // Fallback object structure if backend response lacks certain fields
+      const resData = res || {
+        id: Date.now(),
+        campagneTitre: campagne?.titre,
+        campagneLieu: campagne?.lieu,
+        campagneDateDebut: campagne?.dateDebut,
+        campagneDateFin: campagne?.dateFin,
+        dateReservation: new Date().toISOString(),
+      };
+
+      setCreatedReservation(resData);
       setReservationSuccess(true);
       setShowModal(false);
+
+      // Auto download PDF Ticket & get Base64 for email
+      const pdfResult = await generateTicketPDF(resData, user);
+
+      // Trigger confirmation email with attached PDF ticket
+      const targetEmail = resData.userEmail || user?.email;
+      if (pdfResult?.pdfBase64 && targetEmail) {
+        fetch('/api/email/send-ticket', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: targetEmail,
+            userName: resData.userName || `${user?.prenom || ''} ${user?.nom || ''}`.trim(),
+            campagneTitre: resData.campagneTitre || campagne?.titre,
+            campagneLieu: resData.campagneLieu || campagne?.lieu,
+            dateDebut: resData.campagneDateDebut,
+            dateFin: resData.campagneDateFin,
+            reservationId: resData.id,
+            pdfBase64: pdfResult.pdfBase64,
+          }),
+        }).catch((err) => console.error('Erreur d\'envoi email :', err));
+      }
+
       // Refresh campagne data to update places
       const updated = await campagnesApi.getById(id);
       setCampagne(updated);
@@ -168,15 +207,36 @@ export default function CampagneDetailPage() {
 
           {/* Notifications */}
           {reservationSuccess && (
-            <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-2xl flex items-center gap-3 text-sm">
-              <svg className="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
-              <div>
-                <p className="font-bold">Réservation confirmée !</p>
-                <p className="text-xs mt-0.5">Votre place a été réservée avec succès.
-                  <button onClick={() => router.push('/mes-reservations')} className="ml-1 underline font-semibold">Voir mes réservations →</button>
-                </p>
+            <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-sm shadow-xs">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <svg className="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="font-extrabold text-emerald-900">Réservation confirmée !</p>
+                  <p className="text-xs text-emerald-700 mt-0.5">Votre ticket de réservation (PDF) a été généré et téléchargé.</p>
+                </div>
+              </div>
+              <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                {createdReservation && (
+                  <button
+                    onClick={() => generateTicketPDF(createdReservation, user)}
+                    className="flex-1 sm:flex-none px-3.5 py-2 bg-brand-teal hover:bg-brand-teal-hover text-white text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-xs"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Télécharger Ticket (PDF)
+                  </button>
+                )}
+                <button
+                  onClick={() => router.push('/mes-reservations')}
+                  className="flex-1 sm:flex-none px-3.5 py-2 border border-emerald-300 text-emerald-800 hover:bg-emerald-100 text-xs font-semibold rounded-xl transition-all text-center"
+                >
+                  Voir mes réservations →
+                </button>
               </div>
             </div>
           )}

@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import ChatbotWidget from '@/components/ChatbotWidget';
 
 const adminNavItems = [
   {
@@ -160,6 +161,9 @@ export default function AdminLayout({ children }) {
           </span>
         </footer>
       </div>
+
+      {/* Gemini AI Chatbot Floating Widget */}
+      <ChatbotWidget />
     </div>
   );
 }

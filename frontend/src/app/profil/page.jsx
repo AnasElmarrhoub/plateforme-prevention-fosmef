@@ -92,15 +92,7 @@ export default function ProfilPage() {
           </div>
 
           {/* Badge de statut médical */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-xs space-y-3">
-            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Statut Dossier Prévention</h3>
-            <div className="flex items-center gap-3 p-3 bg-brand-teal/5 border border-brand-teal/20 rounded-xl text-brand-teal text-xs font-semibold">
-              <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <span>Compte synchironisé avec PostgreSQL</span>
-            </div>
-          </div>
+          
         </div>
 
         {/* ── FORMULAIRE D'INFORMATIONS ── */}
@@ -112,7 +104,7 @@ export default function ProfilPage() {
                 Informations Personnelles
               </h2>
               <span className="text-xs text-brand-teal font-semibold">
-                {loading ? 'Mise à jour depuis la base...' : '✓ En direct depuis la DB'}
+                {loading ? 'Mise à jour depuis la base...' : ''}
               </span>
             </div>
 
